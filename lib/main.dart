@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const RestaurantListPage());
+  runApp(const MainApp());
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'SW Bohol Restaurant',
+      home: LoginPage(),
+    );
+  }
 }
 
 class RestaurantListPage extends StatelessWidget {
@@ -38,6 +50,27 @@ class RestaurantListPage extends StatelessWidget {
               trailing: Text('₱200-₱1000'),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // TODO: Login with Google implementation
+          },
+          child: const Text('Login with Google'),
         ),
       ),
     );
