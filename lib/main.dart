@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,18 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class RestaurantListPage extends StatelessWidget {
+class RestaurantListPage extends StatefulWidget {
   const RestaurantListPage({super.key});
+
+  @override
+  State<RestaurantListPage> createState() => _RestaurantListPageState();
+}
+
+class _RestaurantListPageState extends State<RestaurantListPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,30 +62,51 @@ class RestaurantListPage extends StatelessWidget {
             ),
           ],
         ),
-        body: ListView(
-          children: const <Widget>[
-            ListTile(
-              title: Text('The Old Plantation'),
-              subtitle: Text('Tagbilaran Bohol'),
-              trailing: Text('₱200-₱1000'),
-            ),
-            ListTile(
-              title: Text('BeeFarm'),
-              subtitle: Text('Tagbilaran Bohol'),
-              trailing: Text('₱200-₱1000'),
-            ),
-            ListTile(
-              title: Text('Chido Cafe'),
-              subtitle: Text('Tagbilaran Bohol'),
-              trailing: Text('₱200-₱1000'),
-            ),
-            ListTile(
-              title: Text('Chamba Resto'),
-              subtitle: Text('Tagbilaran Bohol'),
-              trailing: Text('₱200-₱1000'),
-            ),
-          ],
-        ),
+        body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: FirebaseFirestore.instance.collection('restaurants').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('An error occurred'),
+                );
+              }
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  final restaurant = snapshot.data!.docs[index].data();
+                  return ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image.network(
+                          restaurant['landscapeImage'],
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              restaurant['name'],
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(restaurant['price'].toString()),
+                          ],
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(restaurant['address']),
+                  );
+                },
+              );
+            }),
       ),
     );
   }
