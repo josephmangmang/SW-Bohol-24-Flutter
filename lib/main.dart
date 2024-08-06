@@ -80,33 +80,80 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   final restaurant = snapshot.data!.docs[index].data();
-                  return ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.network(
-                          restaurant['landscapeImage'],
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RestaurantDetailPage(restaurant: restaurant),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              restaurant['name'],
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(restaurant['price'].toString()),
-                          ],
-                        ),
-                      ],
+                      );
+                    },
+                    child: ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.network(
+                            restaurant['landscapeImage'],
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                restaurant['name'],
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(restaurant['price'].toString()),
+                            ],
+                          ),
+                        ],
+                      ),
+                      subtitle: Text(restaurant['address']),
                     ),
-                    subtitle: Text(restaurant['address']),
                   );
                 },
               );
             }),
+      ),
+    );
+  }
+}
+
+class RestaurantDetailPage extends StatelessWidget {
+  const RestaurantDetailPage({super.key, required this.restaurant});
+
+  final Map<String, dynamic> restaurant;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(restaurant['name']),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.network(
+            restaurant['landscapeImage'],
+            height: 200,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Text(
+            restaurant['address'],
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            restaurant['price'].toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Text(restaurant['description']),
+        ],
       ),
     );
   }
