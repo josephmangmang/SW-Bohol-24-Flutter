@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "32484856957",
+    "project_id": "sw-bohol-24",
+    "storage_bucket": "sw-bohol-24.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32484856957:android:238ac63ec2999f73218d14",
+        "android_client_info": {
+          "package_name": "com.example.sw_bohol_24"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOfQyxLCubI2unaFEejO4p3kYG0DvmuV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
