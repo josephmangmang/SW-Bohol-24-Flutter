@@ -36,9 +36,30 @@ class RestaurantListPage extends StatefulWidget {
 }
 
 class _RestaurantListPageState extends State<RestaurantListPage> {
+  List userFavorites = [];
+
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? streamSubscription;
+
   @override
   void initState() {
     super.initState();
+    // listen for user favorite list change and store in variable
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      streamSubscription = FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots().listen((event) {
+        final List<dynamic> favorites = event.data()?['favorites'] ?? [];
+        print('User favorites: $favorites');
+        setState(() {
+          userFavorites = favorites;
+        });
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    streamSubscription?.cancel();
   }
 
   @override
@@ -65,12 +86,6 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
         body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
             stream: FirebaseFirestore.instance.collection('restaurants').snapshots(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
               if (snapshot.hasError) {
                 return const Center(
                   child: Text('An error occurred'),
@@ -80,6 +95,7 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   final restaurant = snapshot.data!.docs[index].data();
+                  final isUserFavorite = userFavorites.contains(restaurant['id']);
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -93,11 +109,52 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.network(
-                            restaurant['landscapeImage'],
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                          Stack(
+                            children: [
+                              Image.network(
+                                restaurant['landscapeImage'],
+                                height: 200,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                              // favorite button
+                              Positioned(
+                                top: 8,
+                                right: 8,
+                                child: IconButton(
+                                  icon: Icon(
+                                    isUserFavorite ? Icons.favorite : Icons.favorite_border,
+                                    size: 32,
+                                  ),
+                                  color: isUserFavorite ? Colors.red : Colors.white,
+                                  onPressed: () {
+                                    // add the restaurant id to the user's favorite list
+                                    final String id = restaurant['id'];
+                                    final User? user = FirebaseAuth.instance.currentUser;
+                                    if (user != null) {
+                                      final List<dynamic> favorites = List.from(userFavorites);
+                                      if (isUserFavorite) {
+                                        favorites.remove(id);
+                                      } else {
+                                        favorites.add(id);
+                                      }
+                                      FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                                        'favorites': favorites,
+                                      });
+
+                                      // show snackbar
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content:
+                                              Text(isUserFavorite ? 'Removed from favorites' : 'Added to favorites'),
+                                          duration: const Duration(seconds: 1),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              )
+                            ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
