@@ -7,7 +7,7 @@ A new Flutter project.
 This project is a starting point for a Flutter application.
  
 ![image](images/ss.png)
-
+[video.webm](images/video.webm)
 
 Generate Keystore:
 `keytool -genkeypair -v -keystore app.keystore -alias swbohol -keyalg RSA -keysize 2048 -validity 10000`
