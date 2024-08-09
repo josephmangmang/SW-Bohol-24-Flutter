@@ -6,8 +6,11 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
  
-![image](images/ss.png)
-[video.webm](images/video.webm)
+<video width="640" height="360" controls>
+  <source src="images/videos.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
 
 Generate Keystore:
 `keytool -genkeypair -v -keystore app.keystore -alias swbohol -keyalg RSA -keysize 2048 -validity 10000`
