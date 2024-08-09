@@ -229,13 +229,16 @@ class _RestaurantListPageState extends State<RestaurantListPage> {
                               children: [
                                 Stack(
                                   children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: CachedNetworkImage(
-                                        imageUrl: restaurant['landscapeImage'],
-                                        height: 150,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
+                                    Hero(
+                                      tag: restaurant['landscapeImage'],
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: CachedNetworkImage(
+                                          imageUrl: restaurant['landscapeImage'],
+                                          height: 150,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                     // favorite button
@@ -348,9 +351,12 @@ class RestaurantDetailPage extends StatelessWidget {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: CachedNetworkImage(
-                imageUrl: restaurant['landscapeImage'],
-                fit: BoxFit.cover,
+              background: Hero(
+                tag: restaurant['landscapeImage'],
+                child: CachedNetworkImage(
+                  imageUrl: restaurant['landscapeImage'],
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
