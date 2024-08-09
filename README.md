@@ -5,12 +5,10 @@ A new Flutter project.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
- 
-<video width="640" height="360" controls>
-  <source src="images/videos.webm" type="video/webm">
-  Your browser does not support the video tag.
-</video>
 
+![alt text](images/demo.gif)
+
+ ![alt text](<images/Screenshot 2024-08-09 at 11.46.08 PM.png>) ![alt text](<images/Screenshot 2024-08-09 at 11.46.12 PM.png>) ![alt text](<images/Screenshot 2024-08-09 at 11.46.17 PM.png>) ![alt text](<images/Screenshot 2024-08-09 at 11.46.25 PM.png>) 
 
 Generate Keystore:
 `keytool -genkeypair -v -keystore app.keystore -alias swbohol -keyalg RSA -keysize 2048 -validity 10000`
